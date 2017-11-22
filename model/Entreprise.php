@@ -12,8 +12,9 @@
  * @author travail
  */
 class Entreprise extends Model{
-    function __construct() {
-        parent::__construct();
-        ;
-    }
+     var $table='entreprises';
+//    function __construct() {
+//        parent::__construct();
+//        ;
+//    }
 }

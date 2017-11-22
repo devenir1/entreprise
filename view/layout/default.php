@@ -36,7 +36,10 @@
                 <ul class="nav navbar-nav">
                     <li class="active" ><a href="<?= BASE_URL ?>/ent/liste"> Accueil </a> </li>
                     <li ><a href="<?= BASE_URL ?>/ent/nouveau"> Nouvelle Entreprise </a> </li>
-
+                    <li ><a href="<?= BASE_URL ?>/suivi/listePromo"> Liste d'une promotion </a> </li>
+                    <li ><a href="<?= BASE_URL ?>/suivi/listeContact"> Liste contact </a> </li>
+                    <li ><a href="<?= BASE_URL ?>/suivi/formContact"> Formulaire contact </a> </li>
+                    <li ><a href="<?= BASE_URL ?>/suivi/devenirStat"> Devenir stats</a> </li>
                 </ul>
             </div>
         <?php endif; ?>
@@ -52,6 +55,8 @@
     <script type="text/javascript">
         $(function () {
             $('#liste_ent').dataTable();
+            $('#liste_promo').dataTable();
+            $('#liste_contact').dataTable();
         });
     </script>
 
