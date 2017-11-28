@@ -2,6 +2,7 @@
 
 class SuiviController extends Controller {
 
+    //Déclaration des modèles qui vont être utilisés
     private $modActivite = null;
     private $modContact = null;
     private $modEtude = null;
@@ -11,29 +12,25 @@ class SuiviController extends Controller {
     private $modEtudCont = null;
 
     function listePromo() {
+        /* Liste des élèves par promotion */
 //MODELE PROMOTION
-            if (is_null($this->modPromotion)) {
-                $this->modPromotion = $this->loadModel('Promotion');
-            }
-            $d['promotions'] = $this->modPromotion->find(array('conditions' => 1));
-
+        if (is_null($this->modPromotion)) {
+            $this->modPromotion = $this->loadModel('Promotion');
+        }
+        $d['promotions'] = $this->modPromotion->find(array('conditions' => 1));
         if (isset($_POST['submit'])) {
-        $code = $_POST['code'];
-
+            $code = $_POST['code'];
 //MODELE ETUDIANT
             if (is_null($this->modEtudiant)) {
                 $this->modEtudiant = $this->loadModel('Etudiant');
             }
-            $d['etudiants'] = $this->modEtudiant->find(array('conditions' => "p_code = '".$code."'"));
-
-            
-            
+            $d['etudiants'] = $this->modEtudiant->find(array('conditions' => "p_code = '" . $code . "'"));
         }
         $this->set($d);
     }
 
     function formContact() {
-
+        /* Formulaire de contact */
 //MODELE ACTIVITE
         try {
             if (is_null($this->modActivite)) {
@@ -100,6 +97,7 @@ class SuiviController extends Controller {
 //        }
 //        print_r("Après la boucle !");
 //        $id = $this->modContact->insertAI($colonnes, $donnees);
+        $this->set($donnees);
     }
 
     function listeContact() {
@@ -158,23 +156,7 @@ class SuiviController extends Controller {
 
         if (isset($_POST['submit'])) {
             $code = $_POST['code'];
-            //activité
-            if (is_null($this->modActivite)) {
-                $this->modActivite = $this->loadModel('Activite');
-            }
-            $d ['entreprises'] = $this->modActivite->find(array('conditions' => 1));
 
-            //contact
-            if (is_null($this->modContact)) {
-                $this->modContact = $this->loadModel('Contact');
-            }
-            $d ['contacts'] = $this->modContact->find(array('conditions' => 1));
-
-            //etude
-            if (is_null($this->modEtude)) {
-                $this->modEtude = $this->loadModel('Etude');
-            }
-            $d ['etudes'] = $this->modEtude->find(array('conditions' => 1));
 
             //etudiant
             if (is_null($this->modEtudiant)) {
@@ -182,7 +164,6 @@ class SuiviController extends Controller {
             }
             $d ['etudiants'] = $this->modEtudiant->find(array('conditions' => 1));
 
-            
 
             //nombre d'étudiants dans une promos ///compteur pour le nombre d'élèves de la promo
             $d ['eleves'] = $this->modEtudiant->find(array('conditions' => "etudiants.p_code = '" . $code . "'"));
@@ -191,16 +172,15 @@ class SuiviController extends Controller {
                 $compteur++;
             }
             $d ['Total'] = $compteur;
-            print_r($d ['eleves']);
 
             //----------------------------------------------
             if (is_null($this->modEtudCont)) {
                 $this->modEtudCont = $this->loadModel('EtudCont');
             }
-            
+
             //nombre de chomeurs etc...  
             //compteur pour le nombre d'étudiants actuels de la promo
-            $d ['Etudes'] = $this->modEtudCont->find(array('conditions' => array ("etudiants.p_code" => "$code" , "contacts.a_code" => 0)));//, "contacts.a_code = 0"));
+            $d ['Etudes'] = $this->modEtudCont->find(array('conditions' => array("etudiants.p_code" => "$code", "contacts.a_code" => 0))); //, "contacts.a_code = 0"));
             $Etude = 0;
             foreach ($d ['Etudes'] as $E) {
                 $Etude = $Etude + 1;
@@ -208,7 +188,7 @@ class SuiviController extends Controller {
             $d ['Etude'] = $Etude;
 
             //compteur pour le nombre de travailleurs actuels de la promo
-            $d ['Travails'] = $this->modEtudiant->find(array('conditions' => "etudiants.p_code = '" . $code . "'" ));//AND contacts.a_code = 1"));
+            $d ['Travails'] = $this->modEtudCont->find(array('conditions' => array("etudiants.p_code" => "$code", "contacts.a_code" => 1))); //(array('conditions' => "etudiants.p_code = '" . $code . "'" ));//AND contacts.a_code = 1"));
             $Travail = 0;
             foreach ($d ['Travails'] as $T) {
                 $Travail = $Travail + 1;
@@ -216,7 +196,7 @@ class SuiviController extends Controller {
             $d ['Travail'] = $Travail;
 
             //compteur pour le nombre de chomeurs actuel de la promo
-            $d ['Chomages'] = $this->modEtudiant->find(array('conditions' => "etudiants.p_code = '" . $code . "'"));// contacts.a_code = 2"));
+            $d ['Chomages'] = $this->modEtudCont->find(array('conditions' => array("etudiants.p_code" => "$code", "contacts.a_code" => 2))); //(array('conditions' => "etudiants.p_code = '" . $code . "'"));// contacts.a_code = 2"));
             $Chomage = 0;
             foreach ($d ['Chomages'] as $C) {
                 $Chomage = $Chomage + 1;
@@ -259,6 +239,90 @@ class SuiviController extends Controller {
             } else {
                 $d ['pourcentNC'] = 0;
             }
+        }
+        $this->set($d);
+    }
+
+    function promoStat() {
+
+        //promotion----------------------------------------------
+        if (is_null($this->modActivite)) {
+            $this->modActivite = $this->loadModel('Activite');
+        }
+        $d ['activite'] = $this->modActivite->find(array('conditions' => 1));
+
+
+
+        //si le bouton submit est envoyer //si un devenir est sélectionner
+        if (isset($_POST['submit'])) {
+            $code = $_POST['code'];
+            //print_r("test-controller : le code est bien réceptionner, l'érreur ne vient pas d'ici ^^");
+            //etudiant----------------------------------------------
+            if (is_null($this->modEtudiant)) {
+                $this->modEtudiant = $this->loadModel('Etudiant');
+            }
+
+            //promo----------------------------------------------
+            if (is_null($this->modPromotion)) {
+                $this->modPromotion = $this->loadModel('Promotion');
+            }
+            $d ['promos'] = $this->modPromotion->find(array('conditions' => 1));
+
+            //contact----------------------------------------------
+            if (is_null($this->modContact)) {
+                $this->modContact = $this->loadModel('Contact');
+            }
+
+            //etudCont----------------------------------------------
+            if (is_null($this->modEtudCont)) {
+                $this->modEtudCont = $this->loadModel('EtudCont');
+            }
+
+            //JointureContact----------------------------------------------
+            if (is_null($this->modJointureContact)) {
+                $this->modJointureContact = $this->loadModel('JointureContact');
+            }
+
+
+
+
+            //nombre d'élèves du devenir ayant le devenir
+            $d ['eleveDevenir'] = $this->modEtudCont->find(array('conditions' => "contacts.a_code = " . $code));
+            $compteur = 0;
+            foreach ($d ['eleveDevenir'] as $El) {
+                $compteur++;
+            }
+            $d ['TotalDevenir'] = $compteur;
+
+            //nombre de contacts enregistrez
+            $d ['toutContact'] = $this->modContact->find(array('conditions' => 1));
+            $compteur = 0;
+            foreach ($d ['toutContact'] as $El) {
+                $compteur++;
+            }
+            $d ['nbContact'] = $compteur;
+
+            //nombre d'étudiants en tout
+            $d ['eleves'] = $this->modEtudiant->find(array('conditions' => 1));
+            $compteur = 0;
+            foreach ($d ['eleves'] as $El) {
+                $compteur++;
+            }
+            $d ['Total'] = $compteur;
+
+
+            //nombre d'élèves par promos
+            $compteur = 0;
+//            foreach ($d ['promos'] as $promo) {
+//
+//                $d ['test'] = $this->modJointureContact->selectCOUNT("etudiants.e_code", "totals", " activites.a_code = " . $code . " AND etudiants.p_code = " . "'" . $promo->p_code . "'");
+//                //$d ['test'] = $this->modEtudCont->selectCOUNT("e_code","etudiants.p_code = '".$promo -> p_code."'");
+//                $tableau = $d ['test'];
+//                $compteur++;
+//                print_r($d ['test']);
+//                $d ['test2'] = $tableau[$compteur];
+//            }
+//            $d ['Totals'] = $compteur;
         }
         $this->set($d);
     }

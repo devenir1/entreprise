@@ -1,5 +1,4 @@
 <form class="form-horizontal" method="post" action="/entreprises/suivi/modifierContact">
-    <!-- Faire fonction insert ou créer dans suivi_controller.php-->
     <fieldset>
 
         <!-- Form Name -->
@@ -78,7 +77,7 @@
             </div>
         </div>
 
-        <!-- Button -->
+        <!-- Boutton -->
         <div class="form-group">
             <label class="col-md-2 control-label" for="singlebutton"></label>
             <div class="col-md-4">
@@ -87,10 +86,13 @@
         </div>
     </fieldset>
 </form>
+<!--Script javascript-->
 <script type="text/javascript">
     var envoyer = document.getElementById('singlebutton');
 
     envoyer.onclick = function() {
+        //Quand l'utilisateur clique sur le bouton,
+        //un message apparait pour prévenir l'envoie du formulaire
         alert("L'enregistrement est envoyé !");
     };
 </script>

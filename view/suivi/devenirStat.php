@@ -1,20 +1,11 @@
 <section class="col-sm-8 table_responsive">
-
+    <h2>Devenir stats</h2>
     <!-- mettre le menu déroulant avec l'année + le tableau à deux cases du nombre d'élève total et du nobre de contacts -->
-
-
     <!-- initialisation des variables -->
-
     <!-- selectionner la promo dans un menu déroulant -->
     <form method="post" action="<?= BASE_URL ?>/suivi/devenirStat">
         <select name="code">
             <?php foreach ($promotions as $p): ?>
-
-                <!--               < ?php
-                        if ($p === $p->p_code) {    
-                            $selected = "selected";
-                        }
-                        ?> -->
                 <?php if (isset($_POST['code'])): ?>
                     <?php if($_POST['code'] == $p->p_code): ?>
                 <option value="<?= $p->p_code ?>" selected="selected" ><?= $p->p_code ?></option>
